@@ -1,0 +1,36 @@
+{
+  "name": "car-store-server",
+  "version": "1.0.0",
+  "description": "The Back-end for the Car Store Course Project",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobimarkov/CarStore.git"
+  },
+  "keywords": [
+    "car",
+    "store",
+    "backend",
+    "express",
+    "mongodb",
+    "mongoose"
+  ],
+  "author": "Boris Markov",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bobimarkov/CarStore/issues"
+  },
+  "homepage": "https://github.com/bobimarkov/CarStore#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.2",
+    "path": "^0.12.7"
+  }
+}
