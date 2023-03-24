@@ -1,23 +1,54 @@
+require("dotenv").config();
+
 const express = require("express");
-const path = require('path')
+const path = require('path');
+const logger = require('./utils/logger');
+const cookieParser = require("cookie-parser");
 const app = express();
-const port = 5000;
+const PORT = process.env.PORT;
+
+app.use(cookieParser());
 
 app.use('/', express.static(path.join(__dirname, "public")))
 
+app.use((req, res, next) => {
+    logger.info(`${req.method.toUpperCase()} - ${req.url}`);
+    next();
+})
+
 app.use('/api', require("./routes/api.js"))
 
-app.all('*', (req, res) => {
-    if (req.accepts("html")) {
-        res.status(404).sendFile(path.join(__dirname, "/public/404.html"));
-    } else if (req.accepts("json")) {
-        res.status(404).json({message: "404 Not Found!"});
-    }
-    else {
-        res.status(404).send("404 Not Found!");
-    }
+app.use('/', (err, req, res, next) => {
+    const errMessage = err.stack;
+    const errStatus = err.status;
+    
+    logger.error(errMessage);
+    res.status(errStatus || 500).json({ error: errMessage});
+})
+
+app.use((req, res, next) => {
+    res.status(404);
+    res.format({
+        html: () => {
+            res.sendFile(path.join(__dirname, "/views/404.html"));
+        },
+        json: () => {
+            res.json({message: "404 Not Found!"});
+        },
+        default: () => {
+            res.send("404 Not Found!");
+        }
+    });
 });
 
-app.listen(port, () => {
-    console.log(`Server is listening on port ${port}.`);
+app.listen(PORT, () => {
+    logger.info(`Server is listening on port ${PORT}.`);
 });
+
+/** TODO:
+ *  [] CORS
+ *  [] MONGODB + MONGOOSE
+ *  [] MODELS
+ *  [] CONTROLLERS
+ *  [] AUTH + JWT
+ */
