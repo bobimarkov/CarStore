@@ -55,10 +55,13 @@ app.listen(PORT, () => {
     logger.info(`Server is listening on port ${PORT}.`);
 });
 
+
+
 /** TODO:
- *  [] CORS
- *  [] MONGODB + MONGOOSE
- *  [] MODELS
+ *  [X] MONGODB + MONGOOSE
+ *  [X] MODELS
+ *  [] CONVERT TO TYPESCRIPT
  *  [] CONTROLLERS
+ *  [] CORS
  *  [] AUTH + JWT
  */
