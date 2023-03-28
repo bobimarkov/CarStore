@@ -2,10 +2,19 @@ require("dotenv").config();
 
 const express = require("express");
 const path = require('path');
-const logger = require('./utils/logger');
+const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const logger = require('./utils/logger');
+const connectDB = require('./config/db_config')
+
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
+
+connectDB();
+
+app.use(express.json())
+
+app.use(express.urlencoded({extended: false}))
 
 app.use(cookieParser());
 
@@ -19,11 +28,12 @@ app.use((req, res, next) => {
 app.use('/api', require("./routes/api.js"))
 
 app.use('/', (err, req, res, next) => {
-    const errMessage = err.stack;
-    const errStatus = err.status;
-    
-    logger.error(errMessage);
-    res.status(errStatus || 500).json({ error: errMessage});
+    const errMessage = err.message;
+    const errStack = err.stack;
+    const errStatus = err.status || 500;
+
+    logger.error(errStack);
+    res.status(errStatus).json({ error: errMessage});
 })
 
 app.use((req, res, next) => {
@@ -45,10 +55,13 @@ app.listen(PORT, () => {
     logger.info(`Server is listening on port ${PORT}.`);
 });
 
+
+
 /** TODO:
- *  [] CORS
- *  [] MONGODB + MONGOOSE
- *  [] MODELS
+ *  [X] MONGODB + MONGOOSE
+ *  [X] MODELS
+ *  [] CONVERT TO TYPESCRIPT
  *  [] CONTROLLERS
+ *  [] CORS
  *  [] AUTH + JWT
  */
