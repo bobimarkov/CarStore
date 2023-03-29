@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "The Back-end for the Car Store Course Project",
   "main": "index.js",
+  "type": "module",
+  "module": "es2020",
   "scripts": {
-    "dev": "nodemon server.js",
-    "debug": "DEBUG=express:* nodemon server.js",
-    "start": "node server.js"
+    "dev": "concurrently --kill-others \"tsc -w\" \"nodemon dist/server.js\"",
+    "debug": "DEBUG=express:* nodemon dist/server.js",
+    "start": "node dist/server.js",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -18,7 +21,9 @@
     "backend",
     "express",
     "mongodb",
-    "mongoose"
+    "mongoose",
+    "typescript",
+    "loopback"
   ],
   "author": "Boris Markov",
   "license": "Apache-2.0",
@@ -27,7 +32,19 @@
   },
   "homepage": "https://github.com/bobimarkov/CarStore#readme",
   "devDependencies": {
-    "nodemon": "^2.0.21"
+    "@types/cookie-parser": "^1.4.3",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.10",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^34.0.1",
+    "eslint-config-xo-typescript": "^0.56.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "nodemon": "^2.0.21",
+    "typescript": "*"
   },
   "dependencies": {
     "body-parser": "^1.20.2",

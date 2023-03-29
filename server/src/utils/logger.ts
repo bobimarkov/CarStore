@@ -1,6 +1,7 @@
-const winston = require('winston');
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import winston, { type Logger } from 'winston'
 
-const logger = winston.createLogger({
+const logger: Logger = winston.createLogger({
   level: 'info',
   format: winston.format.combine(
     winston.format.timestamp({ format: 'DD-MM-YYYY HH:mm:ss:ms' }),
@@ -8,12 +9,12 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.File({ filename: 'logs/errors.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/logs.log' }),
-  ],
-});
+    new winston.transports.File({ filename: 'logs/logs.log' })
+  ]
+})
 
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console());
+  logger.add(new winston.transports.Console())
 }
 
-module.exports = logger;
+export default logger
