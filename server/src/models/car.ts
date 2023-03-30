@@ -1,7 +1,28 @@
-import { Schema, model } from 'mongoose'
-import reviewSchema from './review.js'
+import { type Model, Schema, SchemaTypes, model } from 'mongoose'
+import type Car from './interfaces/car'
+import { type Review } from './interfaces/car'
 
-const carSchema: Schema = new Schema({
+const reviewSchema: Schema = new Schema<Review>({
+  user: {
+    type: SchemaTypes.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  comment: {
+    type: String,
+    maxLength: 200
+  },
+  rating: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 10
+  }
+}, {
+  timestamps: true
+})
+
+const carSchema: Schema = new Schema<Car, Model<Car>>({
   name: {
     type: String,
     required: true
@@ -54,6 +75,6 @@ const carSchema: Schema = new Schema({
   timestamps: true
 })
 
-const carModel = model('Car', carSchema)
+const carModel = model<Car, Model<Car>>('Car', carSchema)
 
 export default carModel

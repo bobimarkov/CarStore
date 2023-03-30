@@ -1,6 +1,7 @@
-import { Schema, SchemaTypes, model } from 'mongoose'
+import { Schema, SchemaTypes, model, type Model } from 'mongoose'
+import type Dealership from './interfaces/dealership'
 
-const dealershipSchema = new Schema({
+const dealershipSchema = new Schema<Dealership, Model<Dealership>>({
   name: {
     type: String,
     required: true
@@ -34,6 +35,6 @@ const dealershipSchema = new Schema({
   timestamps: true
 })
 
-const dealershipModel = model('Dealership', dealershipSchema)
+const dealershipModel = model<Dealership, Model<Dealership>>('Dealership', dealershipSchema)
 
 export default dealershipModel

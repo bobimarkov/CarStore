@@ -66,7 +66,8 @@ app.listen(PORT, () => {
  *  [X] MONGODB + MONGOOSE
  *  [X] MODELS
  *  [X] CONVERT TO TYPESCRIPT
- *  [] DOMAIN DRIVEN DESIGN IMPLEMENTATION (REPOSITORY, INTERFACES)
+ *  [] DOMAIN DRIVEN DESIGN IMPLEMENTATION (REPOSITORY, INTERFACES, SERVICES)
+ *          Entity Interfaces -> Schema -> Repository -> Service -> Controller -> Routes
  *  [] CONTROLLERS
  *  [] CORS
  *  [] AUTH + JWT
