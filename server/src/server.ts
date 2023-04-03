@@ -78,7 +78,7 @@ mongoose.connect(process.env.DB_URI)
  *          Entity Interfaces -> Schema -> Repository -> Service -> Controller -> Routes
  *          [X] Interfaces
  *          [X] Schemas
- *          [] Repositories
+ *          [X] Repositories
  *          [] Services
  *  [] CONTROLLERS
  *  [] CORS
