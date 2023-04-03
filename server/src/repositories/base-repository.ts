@@ -2,15 +2,17 @@ import { type Model, type Document, type Types, type Query } from 'mongoose'
 import type BaseRepository from './interfaces/base-repository'
 
 class BaseRepositoryImpl<T extends Document> implements BaseRepository<T> {
-  constructor (private readonly model: Model<Document>) {
-    this.model = model
+  protected readonly model: Model<T>
+
+  constructor (schemaModel: Model<T>) {
+    this.model = schemaModel
   }
 
-  async create (item: T): Promise<Document & Omit<Document, '_id'>> {
+  async create (item: T): Promise<T & Omit<T, '_id'>> {
     return await this.model.create(item)
   }
 
-  async update (item: T): Promise<Document> {
+  async update (item: T): Promise<T> {
     return await this.findById(item._id).then(async entity => {
       entity!.set(item)
       return await entity!.save()
@@ -19,8 +21,8 @@ class BaseRepositoryImpl<T extends Document> implements BaseRepository<T> {
     })
   }
 
-  async deleteById (id: Types.ObjectId): Promise<Document & Omit<Document, '_id'>> {
-    return await this.model.findById({ _id: id }).deleteOne()
+  async deleteById (id: Types.ObjectId): Promise<T & Omit<T, '_id'>> {
+    return await this.model.find({ _id: id }).deleteOne()
   }
 
   async findAll (): Promise<T | T[]> {

@@ -1,6 +1,7 @@
 import { type Document, type Types } from 'mongoose'
 
 interface Product {
+  _id: Types.ObjectId
   product: Types.ObjectId
   quantity: number
 }
