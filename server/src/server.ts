@@ -1,10 +1,9 @@
 import dotenv from 'dotenv'
-
+import mongoose from 'mongoose'
 import express, { type Express, type NextFunction, type Request, type Response } from 'express'
 import path from 'path'
 import cookieParser from 'cookie-parser'
 import logger from './utils/logger.js'
-import connectDB from './config/db_config.js'
 import apiRouter from './routes/api.js'
 import { fileURLToPath } from 'url'
 dotenv.config()
@@ -17,8 +16,6 @@ const __filename: string = fileURLToPath(import.meta.url)
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const __dirname: string = path.dirname(__filename)
 
-void connectDB()
-
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: false }))
@@ -27,8 +24,12 @@ app.use(cookieParser())
 
 app.use('/', express.static(path.join(__dirname, '..', 'public')))
 
-app.use((req: Request, _res: Response, next: NextFunction) => {
-  logger.info(`${req.method.toUpperCase()} - ${req.url}`)
+app.use((req: Request, res: Response, next: NextFunction) => {
+  logger.info(`Incoming <${req.socket.remoteAddress!}>: ${req.method.toUpperCase()} - ${req.url}`)
+
+  res.on('finish', () => {
+    logger.info(`Outgoing <${req.socket.remoteAddress!}>: ${req.method.toUpperCase()} - ${req.url} [${res.statusCode}]`)
+  })
   next()
 })
 
@@ -58,16 +59,27 @@ app.use((_req: Request, res: Response, _next: NextFunction) => {
   })
 })
 
-app.listen(PORT, () => {
-  logger.info(`Server is listening on port ${PORT}.`)
-})
+mongoose.connect(process.env.DB_URI)
+  .then(() => {
+    logger.info('Connected with MongoDB.')
 
-/** TODO:
+    app.listen(PORT, () => {
+      logger.info(`Server is listening on port ${PORT}.`)
+    })
+  }).catch((e: Error) => {
+    logger.error(e.message)
+  })
+
+/** TODO
  *  [X] MONGODB + MONGOOSE
  *  [X] MODELS
  *  [X] CONVERT TO TYPESCRIPT
  *  [] DOMAIN DRIVEN DESIGN IMPLEMENTATION (REPOSITORY, INTERFACES, SERVICES)
  *          Entity Interfaces -> Schema -> Repository -> Service -> Controller -> Routes
+ *          [X] Interfaces
+ *          [X] Schemas
+ *          [] Repositories
+ *          [] Services
  *  [] CONTROLLERS
  *  [] CORS
  *  [] AUTH + JWT
