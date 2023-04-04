@@ -83,4 +83,5 @@ mongoose.connect(process.env.DB_URI)
  *  [] CONTROLLERS
  *  [] CORS
  *  [] AUTH + JWT
+ *  [] ALL MIDDLEWARE FUNCTIONS TO BE EXTRACTED IN SEPARATE FILES
  */

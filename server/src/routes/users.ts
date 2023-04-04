@@ -1,12 +1,14 @@
-import express, { type Request, type Response, type Router } from 'express'
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import express, { type Router } from 'express'
+import UserController from '../controllers/user-controller.js'
 const userRouter: Router = express.Router()
 
-userRouter.get('/', (_req: Request, res: Response) => {
-  res.send('All users')
-})
+const controller = new UserController()
 
-userRouter.get('/:id', (req: Request, res: Response) => {
-  res.send(`User with id ${req.params.id}`)
-})
+userRouter.get('/', controller.listAllUsers)
+
+userRouter.post('/', controller.registerUser)
+
+userRouter.get('/:id', controller.getUser)
 
 export default userRouter
