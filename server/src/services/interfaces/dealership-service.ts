@@ -1,17 +1,18 @@
-import type Dealership from '../../models/interfaces/dealership'
+import type Dealership from '../../models/interfaces/dealership.js'
 
 interface DealershipService {
-  addDealership: () => Dealership
-  removeDealership: () => Dealership
-  updateDealership: () => Dealership
-  getAllDealerships: () => Dealership[]
-  getDealership: () => Dealership
+  addDealership: (dealership: Dealership) => Promise<Dealership>
+  updateDealership: (dealershipId: string, dealership: Dealership) => Promise<Dealership>
+  deleteDealership: (dealershipId: string) => Promise<Dealership>
+  getAllDealerships: () => Promise<Dealership | Dealership[]>
+  getDealership: (dealershipId: string) => Promise<Dealership>
 
-  recruitDealer: () => Dealership
-  fireDealer: () => Dealership
-
-  addCarToDealership: () => Dealership
-  removeCarFromDealership: () => Dealership
+  recruitDealer: (dealershipId: string, userId: string) => Promise<Dealership>
+  fireDealer: (dealershipId: string, userId: string) => Promise<Dealership>
+  
+  //TODO Ще се създаде кола тук в Cars колекция. Ще и бъде наложен dealershipdId и ще се извика метод createCar от CarService layer. Адресът на ендпоинта е в документа на Траян.
+  addCarToDealership: () => Promise<Dealership>  
+  removeCarFromDealership: () => Promise<Dealership>
 
   getStatistics: () => void
 }

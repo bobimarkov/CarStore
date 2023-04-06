@@ -12,6 +12,7 @@ interface Review {
 interface Car extends Document {
   name: string
   description?: string
+  dealership: Types.ObjectId
   year: number
   type: string
   transmission: string

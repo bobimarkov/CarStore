@@ -1,8 +1,9 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import UserServiceImpl from '../services/user-service.js'
 import type UserService from '../services/interfaces/user-service.js'
+import type UserController from './interfaces/user-controller.js'
 
-class UserController {
+class UserControllerImpl implements UserController {
   private readonly userService: UserService
 
   constructor () {
@@ -33,6 +34,22 @@ class UserController {
       next(error)
     })
   }
+
+  updateUser = (req: Request, res: Response, next: NextFunction): void => {
+    this.userService.updateUser(req.params.id, req.body).then(user => {
+      res.json(user.toJSON())
+    }).catch(error => {
+      next(error)
+    })
+  }
+
+  deleteUser = (req: Request, res: Response, next: NextFunction): void => {
+    this.userService.deleteUser(req.params.id).then(user => {
+      res.json(user.toJSON())
+    }).catch(error => {
+      next(error)
+    })
+  }
 }
 
-export default UserController
+export default UserControllerImpl

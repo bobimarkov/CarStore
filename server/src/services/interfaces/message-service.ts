@@ -1,9 +1,8 @@
-import { type Types } from 'mongoose'
 import type Message from '../../models/interfaces/message'
 
 interface MessageService {
-  getAllMessengers: (fromId: Types.ObjectId) => string[]
-  getAllMessages: (fromId: Types.ObjectId, toId: Types.ObjectId) => Message[]
+  getAllMessengers: (fromId: string) => string[]
+  getAllMessages: (fromId: string, toId: string) => Message[]
   addMessage: (message: Message) => Message
 }
 

@@ -1,17 +1,19 @@
-import { type Types } from 'mongoose'
 import type Car from '../../models/interfaces/car'
 import { type Review } from '../../models/interfaces/car'
 
 interface CarService {
   addCar: (car: Car) => Promise<Car>
-  updateCar: (car: Car) => Promise<Car>
-  deleteCar: (carId: Types.ObjectId) => Promise<Car>
+  updateCar: (carId: string, car: Car) => Promise<Car>
+  deleteCar: (carId: string) => Promise<Car>
   getAllCars: () => Promise<Car | Car[]>
-  getCarById: (id: Types.ObjectId) => Promise<Car | null>
+  getCar: (id: string) => Promise<Car>
 
-  addReview: (carId: Types.ObjectId, review: Review) => Car
-  deleteReview: (carId: Types.ObjectId, reviewId: Types.ObjectId) => Car
-  updateReview: (carId: Types.ObjectId, reviewId: Types.ObjectId, review: Review) => Car
+  attachDealershipToCar: (carId: string, dealershipId: string) => Promise<void>
+  dettachDealershipFromCar: (carId: string, dealershipId: string) => Promise<void>
+
+  addReview: (carId: string, review: Review) => Promise<Car>
+  deleteReview: (carId: string, reviewId: string) => Promise<Car>
+  updateReview: (carId: string, reviewId: string, review: Review) => Promise<Car>
 }
 
 export default CarService

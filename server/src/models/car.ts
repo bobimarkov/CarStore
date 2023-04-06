@@ -31,6 +31,11 @@ const carSchema: Schema = new Schema<Car, Model<Car>>({
     type: String,
     maxLength: 2000
   },
+  dealership: {
+    type: SchemaTypes.ObjectId,
+    required: true,
+    ref: 'Dealership'
+  },
   year: {
     type: Number,
     required: true

@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { type Router } from 'express'
-import UserController from '../controllers/user-controller.js'
+import type UserController from '../controllers/user-controller.js'
+import UserControllerImpl from '../controllers/user-controller.js'
 const userRouter: Router = express.Router()
 
-const controller = new UserController()
+const controller: UserController = new UserControllerImpl()
 
 userRouter.get('/', controller.listAllUsers)
 
 userRouter.post('/', controller.registerUser)
 
 userRouter.get('/:id', controller.getUser)
+
+userRouter.put('/:id', controller.updateUser)
+
+userRouter.delete('/:id', controller.deleteUser)
 
 export default userRouter

@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import logger from './utils/logger.js'
 import apiRouter from './routes/api.js'
 import { fileURLToPath } from 'url'
+import type AppError from './types/app-error.js'
 dotenv.config()
 
 const app: Express = express()
@@ -35,10 +36,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use('/api', apiRouter)
 
-app.use('/', (err: any, _req: Request, res: Response, _next: NextFunction) => {
+app.use('/', (err: AppError, _req: Request, res: Response, _next: NextFunction) => {
   const errMessage = err.message
   const errStack = err.stack
-  const errStatus: number = err.status ?? 500
+  const errStatus: number = err.status ?? 400
 
   logger.error(errStack)
   res.status(errStatus).json({ error: errMessage })

@@ -8,28 +8,29 @@ class BaseRepositoryImpl<T extends Document> implements BaseRepository<T> {
     this.model = schemaModel
   }
 
-  async create (item: T): Promise<T & Omit<T, '_id'>> {
+  create = async (item: T): Promise<T & Omit<T, '_id'>> => {
     return await this.model.create(item)
   }
 
-  async update (item: T): Promise<T> {
-    return await this.findById(item._id).then(async entity => {
-      entity!.set(item)
-      return await entity!.save()
-    }).catch(error => {
-      throw new Error(error)
+  update = async (id: string, item: T): Promise<T> => {
+    return await this.findById(id).then(async foundItem => {
+      foundItem!.set(item)
+      return await foundItem!.save()
     })
+      .catch(error => {
+        throw new Error(error)
+      })
   }
 
-  async deleteById (id: string): Promise<T & Omit<T, '_id'>> {
-    return await this.model.find({ _id: Types.ObjectId.createFromHexString(id) }).deleteOne()
+  deleteById = async (id: string): Promise<T & Omit<T, '_id'> | null> => {
+    return await this.model.findOneAndDelete({ _id: Types.ObjectId.createFromHexString(id) })
   }
 
-  async findAll (): Promise<T | T[]> {
+  findAll = async (): Promise<T | T[]> => {
     return await this.model.find({})
   }
 
-  findById (id: string): Query<T | null, T> {
+  findById = (id: string): Query<T | null, T> => {
     return this.model.findOne({ _id: Types.ObjectId.createFromHexString(id) })
   }
 }

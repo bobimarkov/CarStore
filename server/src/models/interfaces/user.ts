@@ -1,5 +1,9 @@
 import { type Types, type Document, type Date } from 'mongoose'
 
+enum Roles {
+  USER = 1, DEALER = 2, DEALERSHIP_MANAGER = 3, ADMIN = 4
+}
+
 interface Names {
   _id: Types.ObjectId
   firstName: string
@@ -24,7 +28,7 @@ interface User extends Document {
   email: string
   dateOfBirth: Date
   address?: Address
-  role: Types.Array<string>
+  role: Types.Array<number>
   dealerships?: Types.Array<Types.ObjectId>
   is_blocked: boolean
   is_messaging_blocked: boolean
@@ -33,5 +37,5 @@ interface User extends Document {
   updatedAt: number
 }
 
-export { type Names, type Address, type UserDocumentTypeOverride }
+export { type Names, type Address, type UserDocumentTypeOverride, Roles }
 export default User
