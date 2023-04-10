@@ -8,6 +8,8 @@ interface DealershipController {
   deleteDealership: (req: Request, res: Response, next: NextFunction) => void
   recruitDealer: (req: Request, res: Response, next: NextFunction) => void
   fireDealer: (req: Request, res: Response, next: NextFunction) => void
+  addCar: (req: Request, res: Response, next: NextFunction) => void
+  removeCar: (req: Request, res: Response, next: NextFunction) => void
 }
 
 export default DealershipController

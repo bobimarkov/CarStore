@@ -1,5 +1,5 @@
-import type Car from '../../models/interfaces/car'
-import { type Review } from '../../models/interfaces/car'
+import type Car from '../../models/interfaces/car.js'
+import { type Review } from '../../models/interfaces/car.js'
 
 interface CarService {
   addCar: (car: Car) => Promise<Car>
@@ -7,9 +7,6 @@ interface CarService {
   deleteCar: (carId: string) => Promise<Car>
   getAllCars: () => Promise<Car | Car[]>
   getCar: (id: string) => Promise<Car>
-
-  attachDealershipToCar: (carId: string, dealershipId: string) => Promise<void>
-  dettachDealershipFromCar: (carId: string, dealershipId: string) => Promise<void>
 
   addReview: (carId: string, review: Review) => Promise<Car>
   deleteReview: (carId: string, reviewId: string) => Promise<Car>

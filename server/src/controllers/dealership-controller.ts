@@ -66,6 +66,22 @@ class DealershipControllerImpl implements DealershipController {
       next(error)
     })
   }
+
+  addCar = (req: Request, res: Response, next: NextFunction): void => {
+    this.dealershipService.addCarToDealership(req.params.id, req.body).then(dealership => {
+      res.json(dealership.toJSON())
+    }).catch(error => {
+      next(error)
+    })
+  }
+
+  removeCar = (req: Request, res: Response, next: NextFunction): void => {
+    this.dealershipService.removeCarFromDealership(req.params.dealershipId, req.params.carId).then(dealership => {
+      res.json(dealership.toJSON())
+    }).catch(error => {
+      next(error)
+    })
+  }
 }
 
 export default DealershipControllerImpl

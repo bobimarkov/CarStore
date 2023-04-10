@@ -1,11 +1,11 @@
 import type Order from '../../models/interfaces/order'
 
 interface OrderService {
-  addOrder: (order: Order) => Order
-  deleteOrder: (orderId: string) => Order
-  updateOrder: (orderId: string, newOrder: Order) => Order
-  getAllOrders: () => Order
-  getOrder: (orderId: string) => Order
+  addOrder: (order: Order) => Promise<Order>
+  deleteOrder: (orderId: string) => Promise<Order>
+  updateOrder: (orderId: string, newOrder: Order) => Promise<Order>
+  getAllOrders: () => Promise<Order>
+  getOrder: (orderId: string) => Promise<Order>
 }
 
 export default OrderService
