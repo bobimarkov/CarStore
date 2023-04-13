@@ -51,8 +51,11 @@ const userSchema: Schema = new Schema<User, Model<User, unknown, UserDocumentTyp
   },
   address: addressSchema,
   role: {
-    type: [Number],
-    enum: Roles,
+    type: [{
+      type: String,
+      enum: Roles,
+      required: true
+    }],
     default: [Roles.USER]
   },
   dealerships: [{

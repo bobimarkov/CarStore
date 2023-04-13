@@ -2,6 +2,7 @@ import { type Document, type Types } from 'mongoose'
 
 interface Dealership extends Document {
   name: string
+  UIC: string
   description?: string
   bannerURL?: string
   manager: Types.ObjectId

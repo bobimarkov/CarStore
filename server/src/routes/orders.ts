@@ -5,7 +5,10 @@ const orderRouter: Router = express.Router()
 
 const orderController: OrderController = new OrderControllerImpl()
 
+orderRouter.post('/', orderController.addOrder)
 orderRouter.get('/', orderController.listAllOrder)
 orderRouter.get('/:id', orderController.getOrder)
+orderRouter.put('/:id', orderController.updateOrder)
+orderRouter.delete('/:id', orderController.deleteOrder)
 
 export default orderRouter

@@ -1,5 +1,9 @@
 import { type Document, type Types } from 'mongoose'
 
+enum OrderStatus {
+  ORDERED = 'Ordered', APPROVED = 'Approved', DECLINED = 'Declined', SHIPPED = 'Shipped'
+}
+
 interface Product {
   _id: Types.ObjectId
   product: Types.ObjectId
@@ -15,4 +19,4 @@ interface Order extends Document {
 }
 
 export default Order
-export { type Product }
+export { type Product, OrderStatus }

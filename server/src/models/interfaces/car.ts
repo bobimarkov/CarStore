@@ -1,14 +1,5 @@
 import { type Document, type Types } from 'mongoose'
 
-interface Review {
-  _id: Types.ObjectId
-  user: Types.ObjectId
-  comment?: string
-  rating: number
-  createdAt: number
-  updatedAt: number
-}
-
 interface Car extends Document {
   name: string
   description?: string
@@ -25,10 +16,9 @@ interface Car extends Document {
   price: number
   quantity: number
   photosURLs?: Types.Array<string>
-  reviews?: Types.DocumentArray<Review>
+  reviews?: Types.Array<Types.ObjectId>
   createdAt: number
   updatedAt: number
 }
 
 export default Car
-export { type Review }

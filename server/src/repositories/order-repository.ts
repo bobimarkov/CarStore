@@ -1,7 +1,7 @@
-import type Order from '../models/interfaces/order'
-import orderModel from '../models/order'
-import BaseRepositoryImpl from './base-repository'
-import type OrderRepository from './interfaces/order-repository'
+import type Order from '../models/interfaces/order.js'
+import orderModel from '../models/order.js'
+import BaseRepositoryImpl from './base-repository.js'
+import type OrderRepository from './interfaces/order-repository.js'
 
 class OrderRepositoryImpl extends BaseRepositoryImpl<Order> implements OrderRepository {
   constructor () {

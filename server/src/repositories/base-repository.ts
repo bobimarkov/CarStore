@@ -1,4 +1,4 @@
-import { type Model, type Document, Types, type Query } from 'mongoose'
+import { type Model, type Document, Types } from 'mongoose'
 import type BaseRepository from './interfaces/base-repository.js'
 
 class BaseRepositoryImpl<T extends Document> implements BaseRepository<T> {
@@ -30,8 +30,8 @@ class BaseRepositoryImpl<T extends Document> implements BaseRepository<T> {
     return await this.model.find({})
   }
 
-  findById = (id: string): Query<T | null, T> => {
-    return this.model.findOne({ _id: Types.ObjectId.createFromHexString(id) })
+  findById = async (id: string): Promise<T | null> => {
+    return await this.model.findOne({ _id: Types.ObjectId.createFromHexString(id) }).exec()
   }
 }
 

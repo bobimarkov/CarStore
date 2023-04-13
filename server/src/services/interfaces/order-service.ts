@@ -4,7 +4,7 @@ interface OrderService {
   addOrder: (order: Order) => Promise<Order>
   deleteOrder: (orderId: string) => Promise<Order>
   updateOrder: (orderId: string, newOrder: Order) => Promise<Order>
-  getAllOrders: () => Promise<Order>
+  getAllOrders: () => Promise<Order | Order[]>
   getOrder: (orderId: string) => Promise<Order>
 }
 

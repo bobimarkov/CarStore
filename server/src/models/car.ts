@@ -1,26 +1,5 @@
 import { type Model, Schema, SchemaTypes, model } from 'mongoose'
 import type Car from './interfaces/car'
-import { type Review } from './interfaces/car'
-
-const reviewSchema: Schema = new Schema<Review>({
-  user: {
-    type: SchemaTypes.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  comment: {
-    type: String,
-    maxLength: 200
-  },
-  rating: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 10
-  }
-}, {
-  timestamps: true
-})
 
 const carSchema: Schema = new Schema<Car, Model<Car>>({
   name: {
@@ -75,7 +54,10 @@ const carSchema: Schema = new Schema<Car, Model<Car>>({
     required: true
   },
   photosURLs: [String],
-  reviews: [reviewSchema]
+  reviews: [{
+    type: SchemaTypes.ObjectId,
+    ref: 'Review'
+  }]
 }, {
   timestamps: true
 })

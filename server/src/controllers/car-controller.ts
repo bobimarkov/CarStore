@@ -2,7 +2,6 @@ import { type NextFunction, type Response, type Request } from 'express'
 import type CarController from './interfaces/car-controller.js'
 import CarServiceImpl from '../services/car-service.js'
 import type CarService from '../services/interfaces/car-service.js'
-import AppError from '../types/app-error.js'
 import DealershipServiceImpl from '../services/dealership-service.js'
 import type DealershipService from '../services/interfaces/dealership-service.js'
 

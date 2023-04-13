@@ -1,20 +1,24 @@
-import { type Review } from '../models/interfaces/car.js'
+import type Review from '../models/interfaces/review.js'
 import type Car from '../models/interfaces/car.js'
 import type CarService from './interfaces/car-service.js'
 import CarRepositoryImpl from '../repositories/car-repository.js'
 import type CarRepository from '../repositories/interfaces/car-repository.js'
 import logger from '../utils/logger.js'
 import AppError from '../types/app-error.js'
-import UserRepositoryImpl from '../repositories/user-repository.js'
-import type UserRepository from '../repositories/interfaces/user-repository.js'
+import type UserService from './interfaces/user-service.js'
+import type ReviewService from './interfaces/review-service.js'
+import UserServiceImpl from './user-service.js'
+import ReviewServiceImpl from './review-service.js'
 
 class CarServiceImpl implements CarService {
   private readonly carRepository: CarRepository
-  private readonly userRepository: UserRepository
+  private readonly userService: UserService
+  private readonly reviewService: ReviewService
 
   constructor () {
     this.carRepository = new CarRepositoryImpl()
-    this.userRepository = new UserRepositoryImpl()
+    this.userService = new UserServiceImpl()
+    this.reviewService = new ReviewServiceImpl()
   }
 
   // TODO Get only specific for the operation attributes from the Car var
@@ -68,13 +72,15 @@ class CarServiceImpl implements CarService {
     if (currentCar == null) {
       throw new AppError(`Car with id ${carId} doesn't exist!`, 404)
     }
-    const user = await this.userRepository.findById(review.user.toString())
+    const user = await this.userService.getUserById(review.user.toString())
     if (user == null) {
       throw new AppError(`User with id ${review.user} doesn't exist!`, 404)
     }
-    const reviews = currentCar.reviews!
-    reviews.push(review)
-    currentCar.reviews = reviews
+
+    review.car = currentCar._id
+    const newReview = await this.reviewService.addReview(review)
+    currentCar.reviews!.push(newReview._id)
+
     logger.info(`Review for car with id ${carId} has been added!`)
     return await this.carRepository.update(carId, currentCar)
   }
@@ -84,37 +90,40 @@ class CarServiceImpl implements CarService {
     if (currentCar == null) {
       throw new AppError(`Car with id ${carId} doesn't exist!`, 404)
     }
-    const reviews = currentCar.reviews!
-    const reviewIndex = reviews.findIndex(review => review._id.equals(reviewId))
+
+    const review = await this.reviewService.getReview(reviewId)
+    if (review == null) {
+      throw new AppError(`Review with id ${reviewId} doesn't exist!`, 404)
+    }
+
+    const reviewIndex = currentCar.reviews!.indexOf(review._id, 0)
     if (reviewIndex === -1) {
       throw new AppError(`Review with id ${reviewId} for car with id ${carId} doesn't exist!`, 404)
     }
-    reviews.splice(reviewIndex, 1)
-    currentCar.reviews = reviews
+
+    currentCar.reviews!.splice(reviewIndex, 1)
+
     logger.info(`Review for car with id ${carId} has been deleted!`)
     return await this.carRepository.update(carId, currentCar)
   }
 
-  updateReview = async (carId: string, reviewId: string, review: Review): Promise<Car> => {
+  updateReview = async (carId: string, reviewId: string, review: Review): Promise<Review> => {
     const currentCar = await this.carRepository.findById(carId)
     if (currentCar == null) {
       throw new AppError(`Car with id ${carId} doesn't exist!`, 404)
     }
-    const reviews = currentCar.reviews!
-    const reviewIndex = reviews.findIndex(review => review._id.equals(reviewId))
-    if (reviewIndex === -1) {
-      throw new AppError(`Review with id ${reviewId} for car with id ${carId} doesn't exist!`, 404)
-    }
-    if (review.comment != null) {
-      reviews[reviewIndex].comment = review.comment
-    }
-    if (review.rating != null) {
-      reviews[reviewIndex].rating = review.rating
+
+    const foundReview = await this.reviewService.getReview(reviewId)
+    if (foundReview == null) {
+      throw new AppError(`Review with id ${reviewId} doesn't exist!`, 404)
     }
 
-    currentCar.reviews = reviews
+    if (!currentCar.reviews!.includes(foundReview._id)) {
+      throw new AppError(`Review with id ${reviewId} for car with id ${carId} doesn't exist!`, 404)
+    }
+
     logger.info(`Review with id ${reviewId} for car with id ${carId} has been updated!`)
-    return await this.carRepository.update(carId, currentCar)
+    return await this.reviewService.updateReview(carId, review)
   }
 }
 

@@ -24,21 +24,21 @@ class UserServiceImpl implements UserService {
 
   updateUser = async (userId: string, user: User): Promise<User> => {
     const currentUser = await this.userRepository.findById(userId)
-    if (currentUser != null) {
-      logger.info(`User with id ${userId} has been updated!`)
-      return await this.userRepository.update(userId, user)
+    if (currentUser == null) {
+      throw new AppError(`User with id ${userId} doesn't exist!`, 404)
     }
-    throw new AppError(`User with id ${userId} doesn't exist!`, 404)
+    logger.info(`User with id ${userId} has been updated!`)
+    return await this.userRepository.update(userId, user)
   }
 
   deleteUser = async (userId: string): Promise<User> => {
     const currentUser = await this.userRepository.findById(userId)
-    if (currentUser != null) {
-      logger.info(`User with id ${userId} has been deleted!`)
-      const deletedUser = await this.userRepository.deleteById(userId)
-      return deletedUser!
+    if (currentUser == null) {
+      throw new AppError(`User with id ${userId} doesn't exist!`, 404)
     }
-    throw new AppError(`User with id ${userId} doesn't exist!`, 404)
+    logger.info(`User with id ${userId} has been deleted!`)
+    const deletedUser = await this.userRepository.deleteById(userId)
+    return deletedUser!
   }
 
   getAllUsers = async (): Promise<User | User[]> => {

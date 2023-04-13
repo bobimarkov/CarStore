@@ -1,5 +1,5 @@
 import type Car from '../../models/interfaces/car.js'
-import { type Review } from '../../models/interfaces/car.js'
+import type Review from '../../models/interfaces/review.js'
 
 interface CarService {
   addCar: (car: Car) => Promise<Car>
@@ -10,7 +10,7 @@ interface CarService {
 
   addReview: (carId: string, review: Review) => Promise<Car>
   deleteReview: (carId: string, reviewId: string) => Promise<Car>
-  updateReview: (carId: string, reviewId: string, review: Review) => Promise<Car>
+  updateReview: (carId: string, reviewId: string, review: Review) => Promise<Review>
 }
 
 export default CarService

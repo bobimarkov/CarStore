@@ -1,4 +1,3 @@
-import { type Query } from 'mongoose'
 import type User from '../models/interfaces/user.js'
 import userModel from '../models/user.js'
 import BaseRepositoryImpl from './base-repository.js'
@@ -9,12 +8,12 @@ class UserRepositoryImpl extends BaseRepositoryImpl<User> implements UserReposit
     super(userModel)
   }
 
-  findByUsername (username: string): Query<User | null, User> {
-    return this.model.findOne({ username })
+  async findByUsername (username: string): Promise<User | null> {
+    return await this.model.findOne({ username }).exec()
   }
 
-  findByEmail (email: string): Query<User | null, User> {
-    return this.model.findOne({ email })
+  async findByEmail (email: string): Promise<User | null> {
+    return await this.model.findOne({ email }).exec()
   }
 }
 

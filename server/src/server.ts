@@ -80,8 +80,10 @@ mongoose.connect(process.env.DB_URI)
  *          [X] Interfaces
  *          [X] Schemas
  *          [X] Repositories
- *          [] Services
- *  [] CONTROLLERS
+ *          [X] Services
+ *          [] FIX PROMISES, ERROR HANDLING, PROMISE REJECTIONS. NAMINGS
+ *          [] FIX CAR REVIEW POPULATIONS WHEN FETCHING THEM
+ *  [X] CONTROLLERS
  *  [] CORS
  *  [] AUTH + JWT
  *  [] ALL MIDDLEWARE FUNCTIONS TO BE EXTRACTED IN SEPARATE FILES

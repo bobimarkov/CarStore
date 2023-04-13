@@ -1,6 +1,6 @@
 import { type Model, Schema, SchemaTypes, model } from 'mongoose'
-import { type Product } from './interfaces/order'
-import type Order from './interfaces/order'
+import { OrderStatus, type Product } from './interfaces/order.js'
+import type Order from './interfaces/order.js'
 
 const productSchema = new Schema<Product>({
   product: {
@@ -22,16 +22,19 @@ const orderSchema = new Schema<Order, Model<Order>>({
   },
   status: {
     type: String,
-    default: 'Ordered' // Ordered, Approved/Declined, Shipped
+    enum: OrderStatus,
+    default: OrderStatus.ORDERED
   },
   products: {
-    type: [productSchema],
+    type: [{
+      type: productSchema
+    }],
     required: true
   }
 }, {
   timestamps: true
 })
 
-const orderModel = model<Order, Model<Order>>('order', orderSchema)
+const orderModel = model<Order, Model<Order>>('Order', orderSchema)
 
 export default orderModel
