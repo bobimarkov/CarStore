@@ -6,7 +6,7 @@ const carRouter: Router = express.Router()
 const carController: CarController = new CarControllerImpl()
 
 carRouter.post('/', carController.addCar)
-carRouter.get('/', carController.listAllCars)
+carRouter.get('/', carController.getAllCars)
 carRouter.get('/:id', carController.getCar)
 carRouter.put('/:id', carController.updateCar)
 carRouter.delete('/:id', carController.deleteCar)

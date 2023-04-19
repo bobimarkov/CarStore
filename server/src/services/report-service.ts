@@ -30,82 +30,93 @@ class ReportServiceImpl implements ReportService {
   }
 
   addReport = async (report: Report): Promise<Report> => {
-    const user = await this.userService.getUserById(report.from.toString())
-    if (user == null) {
-      throw new AppError(`User with id ${report.from} doesn't exist!`, 404)
-    }
+    try {
+      const user = await this.userService.getUserById(report.from.toString())
+      if (user == null) {
+        throw new AppError(`User with id ${report.from} doesn't exist!`, 404)
+      }
 
-    switch (report.about.type) {
-      case ReportTargetTypes.REVIEW:
-        if (await this.reviewService.getReview(report.about.target.toString()) == null) {
-          throw new AppError(`Review with id ${report.about.target} doesn't exist!`, 404)
-        }
-        break
-      case ReportTargetTypes.USER:
-        if (await this.userService.getUserById(report.about.target.toString()) == null) {
-          throw new AppError(`User with id ${report.about.target} doesn't exist!`, 404)
-        }
-        break
-      case ReportTargetTypes.PRODUCT:
-        if (await this.carService.getCar(report.about.target.toString()) == null) {
-          throw new AppError(`Car with id ${report.about.target} doesn't exist!`, 404)
-        }
-        break
-      case ReportTargetTypes.DEALERSHIP:
-        if (await this.dealershipService.getDealership(report.about.target.toString()) == null) {
-          throw new AppError(`User with id ${report.about.target} doesn't exist!`, 404)
-        }
-        break
-      default:
-        throw new AppError('Invalid type of target')
-    }
+      switch (report.about.type) {
+        case ReportTargetTypes.REVIEW:
+          if (await this.reviewService.getReview(report.about.target.toString()) == null) {
+            throw new AppError(`Review with id ${report.about.target} doesn't exist!`, 404)
+          }
+          break
+        case ReportTargetTypes.USER:
+          if (await this.userService.getUserById(report.about.target.toString()) == null) {
+            throw new AppError(`User with id ${report.about.target} doesn't exist!`, 404)
+          }
+          break
+        case ReportTargetTypes.PRODUCT:
+          if (await this.carService.getCar(report.about.target.toString()) == null) {
+            throw new AppError(`Car with id ${report.about.target} doesn't exist!`, 404)
+          }
+          break
+        case ReportTargetTypes.DEALERSHIP:
+          if (await this.dealershipService.getDealership(report.about.target.toString()) == null) {
+            throw new AppError(`User with id ${report.about.target} doesn't exist!`, 404)
+          }
+          break
+        default:
+          throw new AppError('Invalid type of target')
+      }
 
-    return await this.reportRepository.create(report).then((createdReport: Report) => {
+      const createdReport = await this.reportRepository.create(report)
       logger.info(`Report with id ${createdReport._id} has been created!`)
       return createdReport
-    }).catch(error => {
-      throw new AppError(error)
-    })
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 
   getReport = async (reportId: string): Promise<Report> => {
-    return await this.reportRepository.findById(reportId).then(foundReport => {
-      if (foundReport != null) {
+    return await this.reportRepository.findById(reportId)
+      .then(foundReport => {
+        if (foundReport == null) {
+          throw new AppError(`Report with id ${reportId} doesn't exist!`, 404)
+        }
         return foundReport
-      }
-      throw new AppError(`Report with id ${reportId} doesn't exist!`, 404)
-    }).catch(error => {
-      throw new AppError(error.message, error.status)
-    })
+      })
+      .catch(async error => await Promise.reject(error))
   }
 
   getAllReports = async (): Promise<Report | Report[]> => {
     return await this.reportRepository.findAll()
+      .then(reports => reports)
+      .catch(async error => await Promise.reject(error))
   }
 
   deleteReport = async (reportId: string): Promise<Report> => {
-    const currentReport = await this.reportRepository.findById(reportId)
-    if (currentReport == null) {
-      throw new AppError(`Report with id ${reportId} doesn't exist!`, 404)
-    }
-    logger.info(`Report with id ${reportId} has been deleted!`)
-    await this.reportRepository.deleteById(reportId)
+    try {
+      const currentReport = await this.reportRepository.findById(reportId)
+      if (currentReport == null) {
+        throw new AppError(`Report with id ${reportId} doesn't exist!`, 404)
+      }
+      logger.info(`Report with id ${reportId} has been deleted!`)
+      await this.reportRepository.deleteById(reportId)
 
-    return currentReport
+      return currentReport
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 
   closeReport = async (reportId: string): Promise<Report> => {
-    const reportRequest = await this.reportRepository.findById(reportId)
-    if (reportRequest == null) {
-      throw new AppError(`Report with id ${reportId} doesn't exist!`, 404)
-    }
+    try {
+      const reportRequest = await this.reportRepository.findById(reportId)
+      if (reportRequest == null) {
+        throw new AppError(`Report with id ${reportId} doesn't exist!`, 404)
+      }
 
-    if (reportRequest.status !== ReportStatus.OPEN) {
-      throw new AppError(`The report with id ${reportId} has been already closed`)
-    }
+      if (reportRequest.status !== ReportStatus.OPEN) {
+        throw new AppError(`The report with id ${reportId} has been already closed`)
+      }
 
-    reportRequest.status = ReportStatus.CLOSED
-    return await this.reportRepository.update(reportId, reportRequest)
+      reportRequest.status = ReportStatus.CLOSED
+      return await this.reportRepository.update(reportId, reportRequest)
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 }
 

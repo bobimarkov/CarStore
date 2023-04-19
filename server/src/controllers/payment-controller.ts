@@ -19,7 +19,7 @@ class PaymentControllerImpl implements PaymentController {
     })
   }
 
-  listAllPayments = (_req: Request, res: Response, next: NextFunction): void => {
+  getAllPayments = (_req: Request, res: Response, next: NextFunction): void => {
     this.paymentService.getAllPayments().then(payments => {
       res.json(payments)
     }).catch(error => {
@@ -36,7 +36,7 @@ class PaymentControllerImpl implements PaymentController {
   }
 
   deletePayment = (req: Request, res: Response, next: NextFunction): void => {
-    this.paymentService.removePayment(req.params.id).then(payment => {
+    this.paymentService.deletePayment(req.params.id).then(payment => {
       res.json(payment.toJSON())
     }).catch(error => {
       next(error)

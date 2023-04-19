@@ -17,43 +17,50 @@ class PaymentServiceImpl implements PaymentService {
   }
 
   addPayment = async (payment: Payment): Promise<Payment> => {
-    const order = await this.orderService.getOrder(payment.order._id.toString())
-    if (order == null) {
-      throw new AppError(`Order with id ${payment.order._id} doesn't exist!`, 404)
-    }
+    try {
+      const order = await this.orderService.getOrder(payment.order._id.toString())
+      if (order == null) {
+        throw new AppError(`Order with id ${payment.order._id} doesn't exist!`, 404)
+      }
 
-    return await this.paymentRepository.create(payment).then((createdPayment: Payment) => {
+      const createdPayment = await this.paymentRepository.create(payment)
       logger.info(`Payment with id ${createdPayment._id} has been created!`)
       return createdPayment
-    }).catch(error => {
-      throw new AppError(error)
-    })
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 
-  removePayment = async (paymentId: string): Promise<Payment> => {
-    const currentPayment = await this.paymentRepository.findById(paymentId)
-    if (currentPayment == null) {
-      throw new AppError(`Payment with id ${paymentId} doesn't exist!`, 404)
-    }
-    logger.info(`Payment with id ${paymentId} has been deleted!`)
-    await this.paymentRepository.deleteById(paymentId)
+  deletePayment = async (paymentId: string): Promise<Payment> => {
+    try {
+      const currentPayment = await this.paymentRepository.findById(paymentId)
+      if (currentPayment == null) {
+        throw new AppError(`Payment with id ${paymentId} doesn't exist!`, 404)
+      }
+      logger.info(`Payment with id ${paymentId} has been deleted!`)
+      await this.paymentRepository.deleteById(paymentId)
 
-    return currentPayment
+      return currentPayment
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 
   getAllPayments = async (): Promise<Payment | Payment[]> => {
     return await this.paymentRepository.findAll()
+      .then(payments => payments)
+      .catch(async error => await Promise.reject(error))
   }
 
   getPayment = async (paymentId: string): Promise<Payment> => {
-    return await this.paymentRepository.findById(paymentId).then(foundPayment => {
-      if (foundPayment != null) {
+    return await this.paymentRepository.findById(paymentId)
+      .then(foundPayment => {
+        if (foundPayment == null) {
+          throw new AppError(`Payment with id ${paymentId} doesn't exist!`, 404)
+        }
         return foundPayment
-      }
-      throw new AppError(`Payment with id ${paymentId} doesn't exist!`, 404)
-    }).catch(error => {
-      throw new AppError(error.message, error.status)
-    })
+      })
+      .catch(async error => await Promise.reject(error))
   }
 }
 

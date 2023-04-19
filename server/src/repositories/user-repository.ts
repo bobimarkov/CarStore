@@ -1,5 +1,6 @@
 import type User from '../models/interfaces/user.js'
 import userModel from '../models/user.js'
+import AppError from '../types/app-error.js'
 import BaseRepositoryImpl from './base-repository.js'
 import type UserRepository from './interfaces/user-repository.js'
 
@@ -8,12 +9,20 @@ class UserRepositoryImpl extends BaseRepositoryImpl<User> implements UserReposit
     super(userModel)
   }
 
-  async findByUsername (username: string): Promise<User | null> {
+  async findByUsername (username: string): Promise<User> {
     return await this.model.findOne({ username }).exec()
+      .then(user => user!)
+      .catch(error => {
+        throw new AppError(error)
+      })
   }
 
-  async findByEmail (email: string): Promise<User | null> {
+  async findByEmail (email: string): Promise<User> {
     return await this.model.findOne({ email }).exec()
+      .then(user => user!)
+      .catch(error => {
+        throw new AppError(error)
+      })
   }
 }
 

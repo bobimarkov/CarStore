@@ -19,7 +19,7 @@ class UserControllerImpl implements UserController {
     })
   }
 
-  listAllUsers = (_req: Request, res: Response, next: NextFunction): void => {
+  getAllUsers = (_req: Request, res: Response, next: NextFunction): void => {
     this.userService.getAllUsers().then(users => {
       res.json(users)
     }).catch(error => {

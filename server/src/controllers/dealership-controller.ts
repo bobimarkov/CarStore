@@ -19,7 +19,7 @@ class DealershipControllerImpl implements DealershipController {
     })
   }
 
-  listAllDealerships = (_req: Request, res: Response, next: NextFunction): void => {
+  getAllDealerships = (_req: Request, res: Response, next: NextFunction): void => {
     this.dealershipService.getAllDealerships().then(dealerships => {
       res.json(dealerships)
     }).catch(error => {
@@ -75,8 +75,8 @@ class DealershipControllerImpl implements DealershipController {
     })
   }
 
-  removeCar = (req: Request, res: Response, next: NextFunction): void => {
-    this.dealershipService.removeCarFromDealership(req.params.dealershipId, req.params.carId).then(dealership => {
+  deleteCar = (req: Request, res: Response, next: NextFunction): void => {
+    this.dealershipService.deleteCarFromDealership(req.params.dealershipId, req.params.carId).then(dealership => {
       res.json(dealership.toJSON())
     }).catch(error => {
       next(error)

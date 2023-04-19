@@ -75,14 +75,14 @@ mongoose.connect(process.env.DB_URI)
  *  [X] MONGODB + MONGOOSE
  *  [X] MODELS
  *  [X] CONVERT TO TYPESCRIPT
- *  [] DOMAIN DRIVEN DESIGN IMPLEMENTATION (REPOSITORY, INTERFACES, SERVICES)
+ *  [X] DOMAIN DRIVEN DESIGN IMPLEMENTATION (REPOSITORY, INTERFACES, SERVICES)
  *          Entity Interfaces -> Schema -> Repository -> Service -> Controller -> Routes
  *          [X] Interfaces
  *          [X] Schemas
  *          [X] Repositories
  *          [X] Services
- *          [] FIX PROMISES, ERROR HANDLING, PROMISE REJECTIONS. NAMINGS
- *          [] FIX CAR REVIEW POPULATIONS WHEN FETCHING THEM
+ *          [X] FIX PROMISES, ERROR HANDLING, PROMISE REJECTIONS. NAMINGS
+ *          [X] FIX CAR REVIEW POPULATIONS WHEN FETCHING THEM
  *  [X] CONTROLLERS
  *  [] CORS
  *  [] AUTH + JWT

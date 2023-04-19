@@ -17,48 +17,57 @@ class ReviewServiceImpl implements ReviewService {
   }
 
   addReview = async (review: Review): Promise<Review> => {
-    const user = await this.userService.getUserById(review.user.toString())
-    if (user == null) {
-      throw new AppError(`User with id ${review.user.toString()} doesn't exist!`, 404)
-    }
+    try {
+      const user = await this.userService.getUserById(review.user.toString())
+      if (user == null) {
+        throw new AppError(`User with id ${review.user.toString()} doesn't exist!`, 404)
+      }
 
-    return await this.reviewRepository.create(review).then((createdReview: Review) => {
+      const createdReview = await this.reviewRepository.create(review)
       logger.info(`Review with id ${createdReview._id} has been created!`)
       return createdReview
-    }).catch(error => {
-      throw new AppError(error)
-    })
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 
-  removeReview = async (reviewId: string): Promise<Review> => {
-    const currentReview = await this.reviewRepository.findById(reviewId)
-    if (currentReview == null) {
-      throw new AppError(`Review with id ${reviewId} doesn't exist!`, 404)
-    }
-    logger.info(`Review with id ${reviewId} has been deleted!`)
-    await this.reviewRepository.deleteById(reviewId)
+  deleteReview = async (reviewId: string): Promise<Review> => {
+    try {
+      const currentReview = await this.reviewRepository.findById(reviewId)
+      if (currentReview == null) {
+        throw new AppError(`Review with id ${reviewId} doesn't exist!`, 404)
+      }
+      logger.info(`Review with id ${reviewId} has been deleted!`)
+      await this.reviewRepository.deleteById(reviewId)
 
-    return currentReview
+      return currentReview
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 
   getReview = async (reviewId: string): Promise<Review> => {
-    return await this.reviewRepository.findById(reviewId).then(foundReview => {
-      if (foundReview != null) {
+    return await this.reviewRepository.findById(reviewId)
+      .then(foundReview => {
+        if (foundReview == null) {
+          throw new AppError(`Review with id ${reviewId} doesn't exist!`, 404)
+        }
         return foundReview
-      }
-      throw new AppError(`Review with id ${reviewId} doesn't exist!`, 404)
-    }).catch(error => {
-      throw new AppError(error.message, error.status)
-    })
+      })
+      .catch(async error => await Promise.reject(error))
   }
 
   updateReview = async (reviewId: string, review: Review): Promise<Review> => {
-    const currentReview = await this.reviewRepository.findById(reviewId)
-    if (currentReview == null) {
-      throw new AppError(`Review with id ${reviewId} doesn't exist!`, 404)
+    try {
+      const currentReview = await this.reviewRepository.findById(reviewId)
+      if (currentReview == null) {
+        throw new AppError(`Review with id ${reviewId} doesn't exist!`, 404)
+      }
+      logger.info(`Review with id ${reviewId} has been updated!`)
+      return await this.reviewRepository.update(reviewId, review)
+    } catch (error) {
+      return await Promise.reject(error)
     }
-    logger.info(`Review with id ${reviewId} has been updated!`)
-    return await this.reviewRepository.update(reviewId, review)
   }
 }
 

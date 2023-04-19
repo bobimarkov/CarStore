@@ -16,38 +16,50 @@ class MessageServiceImpl implements MessageService {
   }
 
   getAllMessengers = async (fromId: string): Promise<string[]> => {
-    const sender = await this.userService.getUserById(fromId)
-    if (sender == null) {
-      throw new AppError(`User with id ${fromId} doesn't exist!`, 404)
-    }
-    const messages = await this.messageRepository.getAllMessagesFrom(fromId)
-    const allReceivers = [...new Set(messages?.map(message => message.to.toString()))]
+    try {
+      const sender = await this.userService.getUserById(fromId)
+      if (sender == null) {
+        throw new AppError(`User with id ${fromId} doesn't exist!`, 404)
+      }
+      const messages = await this.messageRepository.getAllMessagesFrom(fromId)
+      const allReceivers = [...new Set(messages?.map(message => message.to.toString()))]
 
-    return allReceivers
+      return allReceivers
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 
   getAllMessages = async (fromId: string, toId: string): Promise<Message[] | null> => {
-    const sender = await this.userService.getUserById(fromId)
-    if (sender == null) {
-      throw new AppError(`Sender with id ${fromId} doesn't exist!`, 404)
+    try {
+      const sender = await this.userService.getUserById(fromId)
+      if (sender == null) {
+        throw new AppError(`Sender with id ${fromId} doesn't exist!`, 404)
+      }
+      const receiver = await this.userService.getUserById(toId)
+      if (receiver == null) {
+        throw new AppError(`Receiver with id ${toId} doesn't exist!`, 404)
+      }
+      return await this.messageRepository.getAllMessagesFromTo(fromId, toId)
+    } catch (error) {
+      return await Promise.reject(error)
     }
-    const receiver = await this.userService.getUserById(toId)
-    if (receiver == null) {
-      throw new AppError(`Receiver with id ${toId} doesn't exist!`, 404)
-    }
-    return await this.messageRepository.getAllMessagesFromTo(fromId, toId)
   }
 
   addMessage = async (message: Message): Promise<Message> => {
-    const sender = await this.userService.getUserById(message.from.toString())
-    if (sender == null) {
-      throw new AppError(`Sender with id ${message.from.toString()} doesn't exist!`, 404)
+    try {
+      const sender = await this.userService.getUserById(message.from.toString())
+      if (sender == null) {
+        throw new AppError(`Sender with id ${message.from.toString()} doesn't exist!`, 404)
+      }
+      const receiver = await this.userService.getUserById(message.to.toString())
+      if (receiver == null) {
+        throw new AppError(`Receiver with id ${message.to.toString()} doesn't exist!`, 404)
+      }
+      return await this.messageRepository.create(message)
+    } catch (error) {
+      return await Promise.reject(error)
     }
-    const receiver = await this.userService.getUserById(message.to.toString())
-    if (receiver == null) {
-      throw new AppError(`Receiver with id ${message.to.toString()} doesn't exist!`, 404)
-    }
-    return await this.messageRepository.create(message)
   }
 }
 

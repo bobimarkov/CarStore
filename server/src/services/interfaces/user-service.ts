@@ -8,7 +8,7 @@ interface UserService {
   getUserById: (userId: string) => Promise<User>
 
   addUserToDealership: (userId: string, dealershipId: string) => Promise<void>
-  removeUserFromDealership: (userId: string, dealershipId: string) => Promise<void>
+  deleteUserFromDealership: (userId: string, dealershipId: string) => Promise<void>
 }
 
 export default UserService

@@ -23,82 +23,99 @@ class DealershipRequestServiceImpl implements DealershipRequestService {
   }
 
   addRequest = async (dealershipRequest: DealershipRequest): Promise<DealershipRequest> => {
-    const user = await this.userService.getUserById(dealershipRequest.manager.toString())
-    if (user == null) {
-      throw new AppError(`User with id ${dealershipRequest.manager._id} doesn't exist!`, 404)
-    }
+    try {
+      const user = await this.userService.getUserById(dealershipRequest.manager.toString())
+      if (user == null) {
+        throw new AppError(`User with id ${dealershipRequest.manager._id} doesn't exist!`, 404)
+      }
 
-    return await this.dealershipRequestRepository.create(dealershipRequest).then((createdDealershipRequest: DealershipRequest) => {
+      const createdDealershipRequest = await this.dealershipRequestRepository.create(dealershipRequest)
+
       logger.info(`Dealership request with id ${createdDealershipRequest._id} has been created!`)
       return createdDealershipRequest
-    }).catch(error => {
-      throw new AppError(error)
-    })
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 
   deleteRequest = async (dealershipRequestId: string): Promise<DealershipRequest> => {
-    const currentDealershipRequest = await this.dealershipRequestRepository.findById(dealershipRequestId)
-    if (currentDealershipRequest == null) {
-      throw new AppError(`Dealership request with id ${dealershipRequestId} doesn't exist!`, 404)
-    }
-    logger.info(`Dealership request with id ${dealershipRequestId} has been deleted!`)
-    await this.dealershipRequestRepository.deleteById(dealershipRequestId)
+    try {
+      const currentDealershipRequest = await this.dealershipRequestRepository.findById(dealershipRequestId)
+      if (currentDealershipRequest == null) {
+        throw new AppError(`Dealership request with id ${dealershipRequestId} doesn't exist!`, 404)
+      }
+      logger.info(`Dealership request with id ${dealershipRequestId} has been deleted!`)
+      await this.dealershipRequestRepository.deleteById(dealershipRequestId)
 
-    return currentDealershipRequest
+      return currentDealershipRequest
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 
   getAllRequests = async (): Promise<DealershipRequest | DealershipRequest[]> => {
     return await this.dealershipRequestRepository.findAll()
+      .then(dealerships => dealerships)
+      .catch(async error => await Promise.reject(error))
   }
 
   getRequest = async (dealershipRequestId: string): Promise<DealershipRequest> => {
-    return await this.dealershipRequestRepository.findById(dealershipRequestId).then(foundDealershipRequest => {
-      if (foundDealershipRequest != null) {
+    return await this.dealershipRequestRepository.findById(dealershipRequestId)
+      .then(foundDealershipRequest => {
+        if (foundDealershipRequest == null) {
+          throw new AppError(`Dealership request with id ${dealershipRequestId} doesn't exist!`, 404)
+        }
+
         return foundDealershipRequest
-      }
-      throw new AppError(`Dealership request with id ${dealershipRequestId} doesn't exist!`, 404)
-    }).catch(error => {
-      throw new AppError(error.message, error.status)
-    })
+      })
+      .catch(async error => await Promise.reject(error))
   }
 
   approveRequest = async (dealershipRequestId: string): Promise<Dealership> => {
-    const currentDealershipRequest = await this.dealershipRequestRepository.findById(dealershipRequestId)
-    if (currentDealershipRequest == null) {
-      throw new AppError(`Dealership request with id ${dealershipRequestId} doesn't exist!`, 404)
+    try {
+      const currentDealershipRequest = await this.dealershipRequestRepository.findById(dealershipRequestId)
+      if (currentDealershipRequest == null) {
+        throw new AppError(`Dealership request with id ${dealershipRequestId} doesn't exist!`, 404)
+      }
+
+      if (currentDealershipRequest.status !== DealershipRequestStatus.REQUESTED) {
+        throw new AppError('This request has been already closed')
+      }
+
+      const newDealershipBody = {
+        name: currentDealershipRequest.name,
+        UIC: currentDealershipRequest.UIC,
+        description: currentDealershipRequest.description,
+        manager: currentDealershipRequest.manager
+      }
+
+      const newDealership = await this.dealershipService.addDealership(newDealershipBody as Dealership)
+
+      currentDealershipRequest.status = DealershipRequestStatus.APPROVED
+      await this.dealershipRequestRepository.update(dealershipRequestId, currentDealershipRequest)
+
+      return newDealership
+    } catch (error) {
+      return await Promise.reject(error)
     }
-
-    if (currentDealershipRequest.status !== DealershipRequestStatus.REQUESTED) {
-      throw new AppError('This request has been already closed')
-    }
-
-    const newDealershipBody = {
-      name: currentDealershipRequest.name,
-      UIC: currentDealershipRequest.UIC,
-      description: currentDealershipRequest.description,
-      manager: currentDealershipRequest.manager
-    }
-
-    const newDealership = await this.dealershipService.addDealership(newDealershipBody as Dealership)
-
-    currentDealershipRequest.status = DealershipRequestStatus.APPROVED
-    await this.dealershipRequestRepository.update(dealershipRequestId, currentDealershipRequest)
-
-    return newDealership
   }
 
   declineRequest = async (dealershipRequestId: string): Promise<DealershipRequest> => {
-    const currentDealershipRequest = await this.dealershipRequestRepository.findById(dealershipRequestId)
-    if (currentDealershipRequest == null) {
-      throw new AppError(`Dealership request with id ${dealershipRequestId} doesn't exist!`, 404)
-    }
+    try {
+      const currentDealershipRequest = await this.dealershipRequestRepository.findById(dealershipRequestId)
+      if (currentDealershipRequest == null) {
+        throw new AppError(`Dealership request with id ${dealershipRequestId} doesn't exist!`, 404)
+      }
 
-    if (currentDealershipRequest.status !== DealershipRequestStatus.REQUESTED) {
-      throw new AppError('This request has been already closed')
-    }
+      if (currentDealershipRequest.status !== DealershipRequestStatus.REQUESTED) {
+        throw new AppError('This request has been already closed')
+      }
 
-    currentDealershipRequest.status = DealershipRequestStatus.DECLINED
-    return await this.dealershipRequestRepository.update(dealershipRequestId, currentDealershipRequest)
+      currentDealershipRequest.status = DealershipRequestStatus.DECLINED
+      return await this.dealershipRequestRepository.update(dealershipRequestId, currentDealershipRequest)
+    } catch (error) {
+      return await Promise.reject(error)
+    }
   }
 }
 

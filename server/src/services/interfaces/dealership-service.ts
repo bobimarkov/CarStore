@@ -13,7 +13,7 @@ interface DealershipService {
 
   // TODO Ще се създаде кола тук в Cars колекция. Ще и бъде наложен dealershipdId и ще се извика метод createCar от CarService layer. Адресът на ендпоинта е в документа на Траян.
   addCarToDealership: (dealershipId: string, car: Car) => Promise<Dealership>
-  removeCarFromDealership: (dealershipId: string, carId: string) => Promise<Dealership>
+  deleteCarFromDealership: (dealershipId: string, carId: string) => Promise<Dealership>
 
   getStatistics: () => void
 }

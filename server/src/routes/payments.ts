@@ -6,7 +6,7 @@ const paymentRouter: Router = express.Router()
 const paymentController: PaymentController = new PaymentControllerImpl()
 
 paymentRouter.post('/', paymentController.addPayment)
-paymentRouter.get('/', paymentController.listAllPayments)
+paymentRouter.get('/', paymentController.getAllPayments)
 paymentRouter.get('/:id', paymentController.getPayment)
 paymentRouter.delete('/:id', paymentController.deletePayment)
 

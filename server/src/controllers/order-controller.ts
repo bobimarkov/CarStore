@@ -43,7 +43,7 @@ class OrderControllerImpl implements OrderController {
     })
   }
 
-  listAllOrder = (_req: Request, res: Response, next: NextFunction): void => {
+  getAllOrders = (_req: Request, res: Response, next: NextFunction): void => {
     this.orderService.getAllOrders().then(orders => {
       res.json(orders)
     }).catch(error => {

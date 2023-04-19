@@ -6,7 +6,7 @@ const userRouter: Router = express.Router()
 
 const controller: UserController = new UserControllerImpl()
 
-userRouter.get('/', controller.listAllUsers)
+userRouter.get('/', controller.getAllUsers)
 
 userRouter.post('/', controller.registerUser)
 
