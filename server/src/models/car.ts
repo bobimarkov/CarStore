@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose'
-import reviewSchema from './review.js'
+import { type Model, Schema, SchemaTypes, model } from 'mongoose'
+import type Car from './interfaces/car'
 
-const carSchema: Schema = new Schema({
+const carSchema: Schema = new Schema<Car, Model<Car>>({
   name: {
     type: String,
     required: true
@@ -9,6 +9,11 @@ const carSchema: Schema = new Schema({
   description: {
     type: String,
     maxLength: 2000
+  },
+  dealership: {
+    type: SchemaTypes.ObjectId,
+    required: true,
+    ref: 'Dealership'
   },
   year: {
     type: Number,
@@ -49,11 +54,14 @@ const carSchema: Schema = new Schema({
     required: true
   },
   photosURLs: [String],
-  reviews: [reviewSchema]
+  reviews: [{
+    type: SchemaTypes.ObjectId,
+    ref: 'Review'
+  }]
 }, {
   timestamps: true
 })
 
-const carModel = model('Car', carSchema)
+const carModel = model<Car, Model<Car>>('Car', carSchema)
 
 export default carModel

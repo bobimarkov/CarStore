@@ -18,6 +18,8 @@ module.exports = {
     project: ['tsconfig.json']
   },
   rules: {
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/restrict-template-expressions": "off"
   }
 }

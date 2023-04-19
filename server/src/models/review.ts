@@ -1,22 +1,31 @@
-import { Schema, SchemaTypes } from 'mongoose'
+import { type Model, Schema, SchemaTypes, model } from 'mongoose'
+import type Review from './interfaces/review.js'
 
-const reviewSchema = new Schema({
+const reviewSchema: Schema = new Schema<Review, Model<Review>>({
   user: {
     type: SchemaTypes.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
-  comment: {
-    type: String,
-    maxLength: 200
+  car: {
+    type: SchemaTypes.ObjectId,
+    ref: 'Car',
+    required: true
   },
   rating: {
     type: Number,
     required: true,
     min: 1,
     max: 10
+  },
+  comment: {
+    type: String,
+    maxLength: 200
   }
 }, {
   timestamps: true
 })
 
-export default reviewSchema
+const reviewModel = model<Review, Model<Review>>('Review', reviewSchema)
+
+export default reviewModel

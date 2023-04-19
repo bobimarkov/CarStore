@@ -1,12 +1,18 @@
-import express, { type Request, type Response, type Router } from 'express'
+import express, { type Router } from 'express'
+import type CarController from '../controllers/interfaces/car-controller.js'
+import CarControllerImpl from '../controllers/car-controller.js'
 const carRouter: Router = express.Router()
 
-carRouter.get('/', (_req: Request, res: Response) => {
-  res.send('All cars')
-})
+const carController: CarController = new CarControllerImpl()
 
-carRouter.get('/:id', (req: Request, res: Response) => {
-  res.send(`Car with id ${req.params.id}`)
-})
+carRouter.post('/', carController.addCar)
+carRouter.get('/', carController.getAllCars)
+carRouter.get('/:id', carController.getCar)
+carRouter.put('/:id', carController.updateCar)
+carRouter.delete('/:id', carController.deleteCar)
+
+carRouter.post('/:id/reviews', carController.addReview)
+carRouter.put('/:carId/reviews/:reviewId', carController.updateReview)
+carRouter.delete('/:carId/reviews/:reviewId', carController.deleteReview)
 
 export default carRouter

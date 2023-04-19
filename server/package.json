@@ -2,13 +2,13 @@
   "name": "car-store-server",
   "version": "1.0.0",
   "description": "The Back-end for the Car Store Course Project",
-  "main": "index.js",
+  "main": "dist/server.js",
   "type": "module",
   "module": "es2020",
   "scripts": {
-    "dev": "concurrently --kill-others \"tsc -w\" \"nodemon dist/server.js\"",
-    "debug": "DEBUG=express:* nodemon dist/server.js",
-    "start": "node dist/server.js",
+    "dev": "concurrently --kill-others \"tsc -w\" \"nodemon\"",
+    "debug": "DEBUG=express:* nodemon",
+    "start": "node",
     "build": "tsc"
   },
   "repository": {

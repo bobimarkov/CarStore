@@ -1,12 +1,18 @@
-import express, { type Request, type Response, type Router } from 'express'
+import express, { type Router } from 'express'
+import DealershipControllerImpl from '../controllers/dealership-controller.js'
+import type DealershipController from '../controllers/interfaces/dealership-controller.js'
 const dealershipRouter: Router = express.Router()
 
-dealershipRouter.get('/', (_req: Request, res: Response) => {
-  res.send('All dealerships')
-})
+const dealershipController: DealershipController = new DealershipControllerImpl()
 
-dealershipRouter.get('/:id', (req: Request, res: Response) => {
-  res.send(`Dealership with id ${req.params.id}`)
-})
+dealershipRouter.post('/', dealershipController.createDealership)
+dealershipRouter.get('/', dealershipController.getAllDealerships)
+dealershipRouter.get('/:id', dealershipController.getDealership)
+dealershipRouter.put('/:id', dealershipController.updateDealership)
+dealershipRouter.delete('/:id', dealershipController.deleteDealership)
+dealershipRouter.post('/:id/dealers', dealershipController.recruitDealer)
+dealershipRouter.delete('/:dealershipId/dealers/:dealerId', dealershipController.fireDealer)
+dealershipRouter.post('/:id/cars', dealershipController.addCar)
+dealershipRouter.post('/:dealershipId/cars/:carId', dealershipController.deleteCar)
 
 export default dealershipRouter

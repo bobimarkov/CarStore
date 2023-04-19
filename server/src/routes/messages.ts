@@ -1,12 +1,12 @@
-import express, { type Request, type Response, type Router } from 'express'
+import express, { type Router } from 'express'
+import MessageControllerImpl from '../controllers/message-controller.js'
+import type MessageController from '../controllers/interfaces/message-controller.js'
 const messageRouter: Router = express.Router()
 
-messageRouter.get('/', (_req: Request, res: Response) => {
-  res.send('All chats')
-})
+const messageController: MessageController = new MessageControllerImpl()
 
-messageRouter.get('/:id', (req: Request, res: Response) => {
-  res.send(`Chat with user with id ${req.params.id}`)
-})
+messageRouter.post('/', messageController.addMessage)
+messageRouter.get('/:id', messageController.getMessengers)
+messageRouter.get('/:fromId/:toId', messageController.getMessages)
 
 export default messageRouter

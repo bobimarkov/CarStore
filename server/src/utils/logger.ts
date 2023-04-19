@@ -13,8 +13,15 @@ const logger: Logger = winston.createLogger({
   ]
 })
 
+winston.addColors({
+  error: 'red',
+  warn: 'yellow',
+  info: 'cyan',
+  debug: 'green'
+})
+
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console())
+  logger.add(new winston.transports.Console({ format: winston.format.colorize() }))
 }
 
 export default logger

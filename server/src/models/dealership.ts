@@ -1,9 +1,17 @@
-import { Schema, SchemaTypes, model } from 'mongoose'
+import { Schema, SchemaTypes, model, type Model } from 'mongoose'
+import type Dealership from './interfaces/dealership'
 
-const dealershipSchema = new Schema({
+const dealershipSchema = new Schema<Dealership, Model<Dealership>>({
   name: {
     type: String,
     required: true
+  },
+  UIC: {
+    type: String,
+    required: true,
+    unique: true,
+    max: 9,
+    min: 9
   },
   description: {
     type: String,
@@ -12,7 +20,8 @@ const dealershipSchema = new Schema({
   bannerURL: String,
   manager: {
     type: SchemaTypes.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   dealers: [{
     type: SchemaTypes.ObjectId,
@@ -34,6 +43,6 @@ const dealershipSchema = new Schema({
   timestamps: true
 })
 
-const dealershipModel = model('Dealership', dealershipSchema)
+const dealershipModel = model<Dealership, Model<Dealership>>('Dealership', dealershipSchema)
 
 export default dealershipModel

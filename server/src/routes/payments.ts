@@ -1,12 +1,13 @@
-import express, { type Request, type Response, type Router } from 'express'
+import express, { type Router } from 'express'
+import PaymentControllerImpl from '../controllers/payment-controller.js'
+import type PaymentController from '../controllers/interfaces/payment-controller.js'
 const paymentRouter: Router = express.Router()
 
-paymentRouter.get('/', (_req: Request, res: Response) => {
-  res.send('All payments')
-})
+const paymentController: PaymentController = new PaymentControllerImpl()
 
-paymentRouter.get('/:id', (req: Request, res: Response) => {
-  res.send(`Payment with id ${req.params.id}`)
-})
+paymentRouter.post('/', paymentController.addPayment)
+paymentRouter.get('/', paymentController.getAllPayments)
+paymentRouter.get('/:id', paymentController.getPayment)
+paymentRouter.delete('/:id', paymentController.deletePayment)
 
 export default paymentRouter
