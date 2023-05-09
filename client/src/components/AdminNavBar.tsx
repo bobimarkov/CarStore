@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import * as React from 'react'
+import { NavLink } from 'react-router-dom'
 import { styled, type Theme, type CSSObject } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import MuiDrawer from '@mui/material/Drawer'
@@ -65,7 +66,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   })
 )
 
-export default function NavBar (): JSX.Element {
+const NavBar: React.FC = () => {
   const [open, setOpen] = React.useState(false)
 
   const handleDrawerOpen = (): void => {
@@ -87,31 +88,44 @@ export default function NavBar (): JSX.Element {
             <Box height="100%" display="flex" flexDirection="column" justifyContent="space-between">
                 <List>
                     {[
-                      ['Dashboard', <DashboardIcon key="dashboard" />],
-                      ['Users', <PersonIcon key="user" />],
-                      ['Cars', <DirectionsCar key="car" />],
-                      ['Dealerships', <Warehouse key="dealership" />],
-                      ['Reports', <Report key="report" />]
+                      ['Dashboard', <DashboardIcon key="dashboard" />, '/admin/'],
+                      ['Users', <PersonIcon key="user" />, '/admin/users'],
+                      ['Cars', <DirectionsCar key="car" />, '/admin/cars'],
+                      ['Dealerships', <Warehouse key="dealership" />, '/admin/dealerships'],
+                      ['Reports', <Report key="report" />, '/admin/reports']
                     ].map((item, index) => (
                         <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-                            <ListItemButton
-                                sx={{
-                                  minHeight: 48,
-                                  justifyContent: open ? 'initial' : 'center',
-                                  px: 2.5
+                            <NavLink
+                                to={item[2] as string}
+                                style={{
+                                  color: 'black',
+                                  textDecoration: 'none'
                                 }}
                             >
-                                <ListItemIcon
+                                <ListItemButton
                                     sx={{
-                                      minWidth: 0,
-                                      mr: open ? 3 : 'auto',
-                                      justifyContent: 'center'
+                                      minHeight: 48,
+                                      justifyContent: open ? 'initial' : 'center',
+                                      px: 2.5
                                     }}
                                 >
-                                    {item[1]}
-                                </ListItemIcon>
-                                <ListItemText primary={item[0]} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
+                                    <ListItemIcon
+                                        sx={{
+                                          minWidth: 0,
+                                          mr: open ? 3 : 'auto',
+                                          justifyContent: 'center'
+                                        }}
+                                    >
+                                        {item[1]}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={item[0]}
+                                        sx={{
+                                          opacity: open ? 1 : 0
+                                        }}
+                                    />
+                                </ListItemButton>
+                            </NavLink>
                         </ListItem>
                     ))}
                 </List>
@@ -121,24 +135,35 @@ export default function NavBar (): JSX.Element {
                       ['Back to the website', <KeyboardReturn key="return" />]
                     ].map((item, index) => (
                         <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-                            <ListItemButton
-                                sx={{
-                                  minHeight: 48,
-                                  justifyContent: open ? 'initial' : 'center',
-                                  px: 2.5
+                            <NavLink
+                                to={item[2] as string}
+                                style={{
+                                  color: 'black',
+                                  textDecoration: 'none'
                                 }}
                             >
-                                <ListItemIcon
+                                <ListItemButton
                                     sx={{
-                                      minWidth: 0,
-                                      mr: open ? 3 : 'auto',
-                                      justifyContent: 'center'
+                                      minHeight: 48,
+                                      justifyContent: open ? 'initial' : 'center',
+                                      px: 2.5
                                     }}
                                 >
-                                    {item[1]}
-                                </ListItemIcon>
-                                <ListItemText primary={item[0]} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
+                                    <ListItemIcon
+                                        sx={{
+                                          minWidth: 0,
+                                          mr: open ? 3 : 'auto',
+                                          justifyContent: 'center'
+                                        }}
+                                    >
+                                        {item[1]}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={item[0]}
+                                        sx={{ opacity: open ? 1 : 0 }}
+                                    />
+                                </ListItemButton>
+                            </NavLink>
                         </ListItem>
                     ))}
                 </List>
@@ -146,3 +171,5 @@ export default function NavBar (): JSX.Element {
         </Drawer>
   )
 }
+
+export default NavBar
